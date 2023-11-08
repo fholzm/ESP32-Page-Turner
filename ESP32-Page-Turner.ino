@@ -2,28 +2,35 @@
 #include <BleKeyboard.h>
 
 /**
- * Bluetooth Page Turner
- *
+ * ESP32 Bluetooth Page Turner
+ * 
+ * Acts as a bluetooth keyboard sending 
+ * keystroke commands to a client. 
+ * 
  * (c) Stuart Coyle 2023
  */
 #define SERIAL_DEBUG 1
 
-// Bluetooth device name. Anything longer than
-// 16 characters will be truncated.
+/*  
+ * Bluetooth device name. Anything longer than
+ * 16 characters will be truncated.
+ */
 #define DEVICE_NAME "Page Turner"
-
-// GPIO Pin assignments
+#define DEVICE_MANUFACTURER "TheatreControlProducts"
+/* GPIO Pin assignments */
 #define NEXT_PAGE 12
 #define PREVIOUS_PAGE 14
 #define BATTERY_LEVEL 13
 #define BLUETOOTH_LED 5
 
-// Keystrokes to send.
+/* Keystrokes to send. */
 #define NEXT_PAGE_KEY KEY_RIGHT_ARROW
 #define PREVIOUS_PAGE_KEY KEY_LEFT_ARROW
 
-// Time the device will remain disconnected before going
-// into deep sleep.
+/* 
+ * Time the device will remain disconnected before going
+ * into deep sleep.
+ */
 #define MAX_DISCONNECTION_TIME 120000
 
 /*
@@ -32,7 +39,7 @@
 #define DEBOUNCE_TIME 20
 #define REPEAT_TIME 200
 
-BleKeyboard bleKeyboard(DEVICE_NAME, "Stuart Coyle", 100);
+BleKeyboard bleKeyboard(DEVICE_NAME, DEVICE_MANUFACTURER, 100);
 int lastConnection = 0;
 bool lastConnectionState;
 int debounceMillis = 0;
@@ -91,7 +98,9 @@ void sendPreviousPage()
   bleKeyboard.releaseAll();
 }
 
-// Read the button state with debouncing.
+/* 
+ * Read the button state with debouncing.
+ */
 void readButtons()
 {
   int tick = millis();
