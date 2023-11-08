@@ -140,20 +140,26 @@ void loop()
 
   if (bleKeyboard.isConnected())
   {
-#if SERIAL_DEBUG
     if (lastConnectionState == 0)
     {
+      #if SERIAL_DEBUG
       Serial.println("Connected.");
+      #endif
       lastConnectionState = 1;
     }
-#endif
 
     lastConnection = tick;
     readButtons();
   }
   else
   {
-    lastConnectionState = 0;
+    if (lastConnectionState == 1)
+    {
+      #if SERIAL_DEBUG
+      Serial.println("Disconnected.");
+      #endif
+      lastConnectionState = 0;
+    }
   }
 
   digitalWrite(BLUETOOTH_LED, !lastConnectionState);
