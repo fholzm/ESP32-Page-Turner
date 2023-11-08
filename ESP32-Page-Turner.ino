@@ -169,7 +169,6 @@ void loop()
 #if SERIAL_DEBUG
     Serial.println("Disconnected too long, sleeping.");
 #endif
-    esp_sleep_enable_ext0_wakeup(GPIO_NUM_1, 0);
     esp_deep_sleep_start();
   }
 }
