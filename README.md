@@ -1,11 +1,11 @@
-* Bluetooth Page Turner
+# ESP32 Bluetooth Page Turner
 
-** What it is for.
+## What it is for.
 This is the code for a Bluetooth enabled page turner for use by musicians and
 others that need a foot operated method of turning pages on a device.
 
-** Requirements
-*** Hardware
+## Requirements
+### Hardware
 You will require an ESP32 board with USB and battery support.
 I used a Lolin D32. Other boards may be suitable.
 
@@ -19,7 +19,7 @@ and the 3.3V rail.
 
 Add a lithium ion battery and put it all in a case then you are sweet.
 
-*** Software
+### Software
 This software is Arduino code designed for the ESP32.
 You will need to install ESP32 support in the Arduino IDE.
 <https://docs.espressif.com/projects/arduino-esp32/en/latest/getting_started.html>
@@ -28,11 +28,11 @@ You will need to install two libraries:
  * [NimBLE-Arduino](https://github.com/h2zero/NimBLE-Arduino/tree/release/1.4)
  * [ESP32-BLE-Keyboard](https://github.com/T-vK/ESP32-BLE-Keyboard)
 
-** Options
-The defines in the first part of the code give you some options that you can
+## Options
+The #defines in the first part of the code give you some options that you can
 tweak to your liking.
 
-** Operation
+## Operation
 The device will start up and immediately go into deep sleep. This is to conserve
 battery life. Press the wakeup button (by default the Previous Page button) in
 order to wake it. You may now pair to a device.
