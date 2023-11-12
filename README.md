@@ -46,3 +46,7 @@ You can change that in the code if you need.
 If the device remains unconnected for more than 2 minutes (configurable) then
 it will go back to sleep again and requires a button press to restart. The
 LED indicates when the device has a bluetooth connection.
+
+The LED should flash 6 times on device restart. It will flash 3 times on getting a 
+connection and 5 times on disconnection. 
+
