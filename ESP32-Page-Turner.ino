@@ -35,15 +35,20 @@
 
 /*
  *  Key debouncing variables.
+ *  DEBOUNCE_TIME is milliseconds to wait for a key to become stable. 
+ *  REPEAT_TIME is the time in ms to repeat a held down key. 
  */
 #define DEBOUNCE_TIME 20
 #define REPEAT_TIME 200
+#define FLASH_TIME 250
 
 BleKeyboard bleKeyboard(DEVICE_NAME, DEVICE_MANUFACTURER, 100);
 int lastConnection = 0;
 bool lastConnectionState;
 int debounceMillis = 0;
 int repeatMillis = 0;
+int flashCount = 0;
+int lastFlash = 0;
 
 /*
  *  The button state is stored as a bitmap.
@@ -72,7 +77,7 @@ void setup()
   Serial.begin(115200);
   Serial.println("Starting page turner.");
 #endif
-
+  flash(6);
   bleKeyboard.begin();
 
   pinMode(BLUETOOTH_LED, OUTPUT);
@@ -142,6 +147,22 @@ void readButtons()
   lastButtonState = reading;
 }
 
+void flash(int n){
+  flashCount = n*2;   
+}
+
+void do_flash() {
+  if(flashCount > 0) {
+    if(millis() - lastFlash > FLASH_TIME){
+      digitalWrite(BLUETOOTH_LED, flashCount % 2);
+      flashCount--;
+      lastFlash = millis();
+    }
+  }else{
+    digitalWrite(BLUETOOTH_LED, !lastConnectionState);
+  }
+}
+
 void loop()
 {
   int tick = millis();
@@ -154,6 +175,7 @@ void loop()
       #if SERIAL_DEBUG
       Serial.println("Connected.");
       #endif
+      flash(3);
       lastConnectionState = 1;
     }
 
@@ -168,10 +190,11 @@ void loop()
       Serial.println("Disconnected.");
       #endif
       lastConnectionState = 0;
+      flash(5);
     }
   }
 
-  digitalWrite(BLUETOOTH_LED, !lastConnectionState);
+  do_flash();
 
   if (tick - lastConnection > MAX_DISCONNECTION_TIME)
   {
