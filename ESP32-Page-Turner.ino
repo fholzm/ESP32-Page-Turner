@@ -20,8 +20,8 @@
 /* GPIO Pin assignments */
 #define NEXT_PAGE 12
 #define PREVIOUS_PAGE 14
-#define BATTERY_LEVEL 13
 #define BLUETOOTH_LED 22
+#define BATTERY_LEVEL 13
 
 /* Keystrokes to send. */
 #define NEXT_PAGE_KEY KEY_RIGHT_ARROW
@@ -41,10 +41,12 @@
 #define DEBOUNCE_TIME 20
 #define REPEAT_TIME 200
 #define FLASH_TIME 250
+#define BATTERY_UPDATE_TIME 10000
 
 BleKeyboard bleKeyboard(DEVICE_NAME, DEVICE_MANUFACTURER, 100);
 int lastConnection = 0;
 bool lastConnectionState;
+int lastBatteryUpdate = 0;
 int debounceMillis = 0;
 int repeatMillis = 0;
 int flashCount = 0;
@@ -147,6 +149,21 @@ void readButtons()
   lastButtonState = reading;
 }
 
+void readBatteryLevel()
+{
+  // Battery level estimation like in https://github.com/G6EJD/LiPo_Battery_Capacity_Estimator/blob/master/ReadBatteryCapacity_LIPO.ino
+  float voltage = analogRead(BATTERY_LEVEL) / 4096.0 * 7.23;
+  float percentage = 2808.3808 * pow(voltage, 4) - 43560.9157 * pow(voltage, 3) + 252848.5888 * pow(voltage, 2) - 650767.4615 * voltage + 626532.5703;
+
+  #if SERIAL_DEBUG
+  Serial.println("Voltage: " + String(voltage));
+  Serial.println("percentage: " + String(int(percentage)) + "%");
+  #endif
+
+  // bleKeyboard.setBatteryLevel (int(percentage));
+  bleKeyboard.setBatteryLevel (75);
+}
+
 void flash(int n){
   flashCount = n*2;   
 }
@@ -192,6 +209,12 @@ void loop()
       lastConnectionState = 0;
       flash(5);
     }
+  }
+
+  if (tick - lastBatteryUpdate > BATTERY_UPDATE_TIME)
+  {
+    readBatteryLevel();
+    lastBatteryUpdate = tick;
   }
 
   do_flash();
