@@ -21,7 +21,7 @@
 #define NEXT_PAGE 12
 #define PREVIOUS_PAGE 14
 #define BATTERY_LEVEL 13
-#define BLUETOOTH_LED 5
+#define BLUETOOTH_LED 22
 
 /* Keystrokes to send. */
 #define NEXT_PAGE_KEY KEY_RIGHT_ARROW
